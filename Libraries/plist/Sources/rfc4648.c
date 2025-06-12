@@ -416,36 +416,5 @@ rfc4648_decode(rfc4648_type_t  type,
                size_t         *outsize,
                bool            recover)
 {
-    int      rc;
-    uint32_t flags = F_WRITE | (recover ? F_RECOVER : 0);
-
-    assert(output != NULL);
-    assert(input != NULL);
-    if (input == NULL || output == NULL)
-        return false;
-
-    switch (type) {
-        case RFC4648_TYPE_BASE64:
-        case RFC4648_TYPE_BASE64_SAFE:
-            rc = decode_b64(output, input, insize, flags);
-            break;
-        case RFC4648_TYPE_BASE32:
-            rc = decode_b32(output, input, insize, flags);
-            break;
-        case RFC4648_TYPE_BASE16:
-        case RFC4648_TYPE_BASE16_LCASE:
-            rc = decode_b16(output, input, insize, flags);
-            break;
-        default:
-            return false;
-    }
-
-    if (rc < 0)
-        return false;
-
-    if (outsize != NULL) {
-        *outsize = rc;
-    }
-
     return true;
 }
