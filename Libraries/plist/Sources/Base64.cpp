@@ -17,6 +17,10 @@ Decode(std::string const &in, std::vector<uint8_t> &out)
 {
     size_t outsize = rfc4648_get_decoded_size(RFC4648_TYPE_BASE64_SAFE, in.size());
     out.resize(outsize);
+
+    if (outsize == 0)
+        return;
+
     rfc4648_decode(RFC4648_TYPE_BASE64_SAFE, &in[0], in.size(), reinterpret_cast<char *>(&out[0]), &outsize, true);
 }
 
