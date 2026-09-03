@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.arch.runner }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Run compile script
         run: ./compile.sh
@@ -23,8 +23,13 @@ jobs:
         run: zip -r build-${{ matrix.arch.name }}.zip build
 
       - name: Update latest release
-        uses: pyTooling/Actions/releaser/composite@main
-        with:
-          tag: latest
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: build-${{ matrix.arch.name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload latest \
+            build-${{ matrix.arch.name }}.zip \
+            --clobber -R ${{ github.repository }}
+
+          gh release edit latest \
+            --title "Latest" \
+            --target ${{ github.sha }} -R ${{ github.repository }}
